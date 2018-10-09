@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>{{ the_title }}</h1>
+
+<p>Welcome to BECAUSE I CARE. Here we can collectively coordinate to care for our loved one.</p>
+
+<form method="POST" action="/existinguser">
+	<table>
+		<p>Please sign in:</p>
+		<tr>
+			<td>Username:</td>
+			<td><input type="text" name="username"></td>
+		</tr>
+		<tr>
+			<td>Password:</td>
+			<td><input type="password" name="password"></td>
+		</tr>
+	</table>
+</form>
+
+{% endblock %}
