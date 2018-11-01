@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1 class=login-form>{{ the_title }}</h1>
+
+<h3>Would you like to add an item?</h3></br>
+<form action="/addingItem" method="POST">
+	<p>Describe a need:</p>
+	<input type="text" name="addItem" placeholder="Add Item">
+	<input type="submit" value="Submit">
+</form>
+<!-- /* I need to do a for loop into a table to add the items.*/ -->
+
+<!-- {% for item in data %}
+<tr>
+    <td>{{item[0]}}</td>
+    <td>{{item[1]}}</td>
+    ...
+</tr>
+{% endfor %} -->
+
+<table>
+	<tr>
+		{% for row_title in the_row_titles %}
+		<th>{{ row_title }}</th>
+		{% endfor %}
+	</tr>
+	{% for log_row in the_data %}
+	<tr>
+		{% for item in log_row %}
+		<td>{{ item }}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</table>
+
+<table width="30%">
+	<tr>
+		<td>item 1</td>
+	</tr>
+	<tr>
+		<td>Item 2</td>
+	</tr>
+	<tr>
+		<td>Item 3</td>
+	</tr>
+</table>
+
+
+{% endblock %}
