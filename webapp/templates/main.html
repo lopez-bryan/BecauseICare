@@ -8,9 +8,11 @@
 <form action="/addingItem" method="POST">
 	<p>Describe a need:</p>
 	<input type="text" name="addItem" placeholder="Add Item">
+	<br>
+	<br>
 	<input type="submit" value="Submit">
 </form>
-<!-- /* I need to do a for loop into a table to add the items.*/ -->
+
 
 <!-- {% for item in data %}
 <tr>
@@ -20,7 +22,7 @@
 </tr>
 {% endfor %} -->
 
-<table>
+<table class="center">
 	<tr>
 		{% for row_title in the_row_titles %}
 		<th>{{ row_title }}</th>
@@ -34,18 +36,5 @@
 	</tr>
 	{% endfor %}
 </table>
-
-<table width="30%">
-	<tr>
-		<td>item 1</td>
-	</tr>
-	<tr>
-		<td>Item 2</td>
-	</tr>
-	<tr>
-		<td>Item 3</td>
-	</tr>
-</table>
-
 
 {% endblock %}
