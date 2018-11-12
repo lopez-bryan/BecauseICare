@@ -1,40 +1,174 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Welcome to Because I Care</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	<style type="text/css">
+		h1 {
+			text-align: center;
+		}
+		body {
+			background-color: #9FC;
+			padding: 50px;
+		}
+	</style>
+</head>
 
-{% block body %}
+<header>
+	<div class="navbar-header">
+      <a class="navbar-brand" href="/">
+	  <img style="max-width:120px; margin-top: -7px;" src="{{ url_for('static', filename='images/mainlogo.png') }}">
+	  </a>
+    </div>
 
-<h1 class=login-form>{{ the_title }}</h1>
+	<div class = "container-fluid" style="margin-bottom: 100px; mar"  >
+		<a href="/home/"><button type="button" class="btn btn-success" aria-label="Left Align" style="margin-top: 5px; margin-bottom: 5px; height: 44px; margin-right: 15px">
+		  <span class="glyphicon glyphicon-off" aria-hidden="true"></span>Home
+		</button></a>
+		<div style="margin-right: 10px; margin-left: 15px; margin-top: 5px; margin-bottom: 5px;"  class="container-fluid">	
+		</div>
+	</div>
 
-<h3>Would you like to add an item?</h3></br>
-<form action="/addingItem" method="POST">
-	<p>Describe a need:</p>
-	<input type="text" name="addItem" placeholder="Add Item">
-	<br>
-	<br>
-	<input type="submit" value="Submit">
-</form>
+	<ul class="nav navbar-nav navbar-right" style="text-align: right; margin-top: 5px;">
+		  
+		  <div style="margin-right: 10px; margin-left: 15px; margin-top: 5px; margin-bottom: 5px;"  class="container-fluid">
+			<h5>
 
+			<a href="/support-donate/"> <span class="glyphicon glyphicon-heart"></span> Support&nbsp;&nbsp;&nbsp;</a>
+	
+			<a role="presentation" data-toggle="modal" data-target="#exampleModal" href="#"><span class="glyphicon glyphicon-log-in"></span> Login&nbsp;&nbsp;&nbsp;</a>
 
-<!-- {% for item in data %}
-<tr>
-    <td>{{item[0]}}</td>
-    <td>{{item[1]}}</td>
-    ...
-</tr>
-{% endfor %} -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title" id="exampleModalLabel">Login</h4>
+				  </div>
+				  <div class="modal-body">
+					  <div class="container-fluid">
+						  <form action="" class="form-inline" method="post">
+							<input type="text" class="form-control" placeholder="Username" name="username" value="">
+							 <input type="password" class="form-control" placeholder="Password" name="password" value="">
+							<input class="btn btn-primary" type="submit" value="Login">
+						  </form>
+						  
+							<div class="container">
+							<br>
+						   <p>No account? <a href='/register'>Register here</a>.</p>
+						   <br>
+							
+						  </div>
+					</div>
+				  </div>
 
-<table class="center">
-	<tr>
-		{% for row_title in the_row_titles %}
-		<th>{{ row_title }}</th>
-		{% endfor %}
-	</tr>
-	{% for log_row in the_data %}
-	<tr>
-		{% for item in log_row %}
-		<td>{{ item }}</td>
-		{% endfor %}
-	</tr>
-	{% endfor %}
-</table>
+				</div>
+			  </div>
+			</div>
 
-{% endblock %}
+		<a role="presentation" class="active" data-toggle="modal" data-target="#register" href="#"><span class="glyphicon glyphicon-pencil"></span> Sign up</a><h5>
+		<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				<h4 class="modal-title" id="exampleModalLabel">Register</h4>
+			  </div>
+			  <div class="modal-body">
+				  <div class="container">
+					  
+						<form method=post action="/register">
+						  <dl>
+							
+  <dt><label for="username">Username</label>
+  <dd><input id="username" name="username" type="text" value="">
+  
+  </dd>
+
+							
+  <dt><label for="email">Email Address</label>
+  <dd><input id="email" name="email" type="text" value="">
+  
+  </dd>
+
+							
+  <dt><label for="password">New Password</label>
+  <dd><input id="password" name="password" type="password" value="">
+  
+  </dd>
+
+							
+  <dt><label for="confirm">Repeat Password</label>
+  <dd><input id="confirm" name="confirm" type="password" value="">
+  
+  </dd>
+
+							
+  <dt><label for="accept_tos">I accept the <a href="/about/tos" target="blank">Terms of Service</a> and <a href="/about/privacy-policy" target="blank">Privacy Notice</a> (updated November, 8 2018)</label>
+  <dd><input id="accept_tos" name="accept_tos" type="checkbox" value="y">
+  
+  </dd>
+
+						  </dl>
+						  <p><input type=submit value=Register>
+						</form>
+					  
+				</div>
+			  </div>
+
+			</div>
+		  </div>
+		</div>
+	  </div>
+      </ul>
+	</ul>
+
+</header>
+
+<body>
+	<p>Hello There Everyone</p>
+
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+<footer class="page-footer" style="background-color: #ececec;">
+          <div class="container" style="margin-bottom: 15px; min-height: 100px; border-width: 100%">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">You've reached the end!</h5>
+
+                <p class="grey-text text-lighten-4">Contact: bryanjlopez@gmail.com.</p>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="/support-donate/">Support this Website!</a></li>
+                  <li><a class="grey-text text-lighten-3" href="/consulting/">Hire me</a></li>
+                  <li><a class="grey-text text-lighten-3" href="https://www.facebook.com/pythonprogramming.net/">Facebook</a></li>
+                  <li><a class="grey-text text-lighten-3" href="https://twitter.com/sentdex">Twitter</a></li>
+                  <li><a class="grey-text text-lighten-3" href="https://plus.google.com/+sentdex">Google+</a></li>
+                </ul>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h6 class="white-text">Legal stuff:</h6>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="/about/tos/">Terms and Conditions</a></li>
+                  <li><a class="grey-text text-lighten-3" href="/about/privacy-policy/">Privacy Policy</a></li>
+
+                </ul>
+              </div>
+            </div>
+          </div>
+          <a href="https://xkcd.com/353/" target="blank"><p class="grey-text right" style="padding-right:10px">Programming is a superpower.</p></a>
+          <div class="footer-copyright">
+            <div class="container">
+            © BecauseICare
+
+            </div>
+
+          </div>
+        </footer>
+	
+</body>
+
+</html>
