@@ -25,23 +25,62 @@
 	</ul>
   </div>
 
- <!--  <div class="tab-content">
-  <div role="tabpanel" class="tab-pane fade in active" id="basics">
-	<ul>
-	   {% for t in TOPIC_DICT["Basics"] %}
-	     <li><a href="{{t[1]}}">{{t[0]}}</a></li>
-	   {% endfor %}
-	</ul>
-  </div> -->
+ 
 
 
   
-  <div role="tabpanel" class="tab-pane fade" id="wdev">web dev</div>
+  <!-- <div role="tabpanel" class="tab-pane fade" id="wdev">web dev</div>
 
-  <div role="tabpanel" class="tab-pane fade" id="dan">Data analysis!#Q$@!#</div>
+  <div role="tabpanel" class="tab-pane fade" id="dan">Data analysis!#Q$@!#</div> -->
+
+</div>
 
 </div>
 
+<div class="container" align="center" style="max-width: 300px">
+	<table class="table table-hover">
+	<tr>
+		<th>{{ the_title }}</th>
+	</tr>
+	<form action="itemUpdate" method="POST">
+	{% for log_row in the_contents %}
+	<tr>
+		{% for item in log_row %}
+		<td><input type="checkbox" name="{{ item }}" value="{{ item }}">&nbsp;&nbsp;&nbsp;{{ item }}</td>
+		{% endfor %}
+
+	</tr>
+	{% endfor %}
+	<td><input type="submit" value="Submit"></td>
+	</form>
+</table>
 </div>
+
+<div class="container" align="center" style="max-width: 300px">
+	<table class="table table-hover">
+	<tr>
+		<th>{{ finished_title }}</th>
+	</tr>
+	{% for log_row in finished_items %}
+	<tr>
+		{% for item_complete in log_row %}
+		<td>{{ item_complete }}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</table>
+</div>
+
+<!-- <ul>
+
+    {% for recipe in recipes %}
+
+      <li><a href="/recipe?rid={{recipe[0]}}">{{recipe[1]}}</a></li>
+
+    {% endfor %}
+
+  </ul> -->
+
+
 
 {% endblock %}

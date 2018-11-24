@@ -1,0 +1,24 @@
+{% extends "header.html" %}
+
+{% block body %}
+
+<body>
+	<div class="container" align="center">
+		<br>
+		<h4>Remove an Item:</h4>
+		<br>
+		<form action="/remove" method="POST">
+	{% for log_row in the_contents %}
+	<tr>
+		{% for item in log_row %}
+		<td><input type="checkbox" name="removeItems[]" value="{{ item }}">&nbsp;&nbsp;&nbsp;{{ item }}</td>
+		{% endfor %}
+
+	</tr>
+	{% endfor %}
+	<td><input type="submit" value="Submit"></td>
+
+		<p>{{ error }}</p>
+	</div>
+</body>
+{% endblock %}

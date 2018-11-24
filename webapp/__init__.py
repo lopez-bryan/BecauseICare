@@ -6,6 +6,7 @@ from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 import gc
 import os
+from functools import wraps
 
 
 TOPIC_DICT = Content()
@@ -17,11 +18,65 @@ app.secret_key = os.urandom(24)
 @app.route('/main/')
 def homepage():
     return render_template("main.html")
-
+    
 @app.route('/home/')
 def home():
+	c, conn = connection()
+	_ = c.execute('SELECT item FROM items ORDER BY item DESC;')
+	contents = c.fetchall() 
+	title = 'NEEDS'
+	c.close()
+	conn.close()
+	gc.collect()
+	#second table
+	c, conn = connection()
+	_ = c.execute('SELECT finished_item FROM items')#-
+	finished_items = c.fetchall() 
+	finished_title = 'NEEDS MET'
+	c.close()
+	conn.close()
+	gc.collect()
 	#flash("flash test!!!!")
-    return render_template("home.html", TOPIC_DICT = TOPIC_DICT)
+	return render_template("home.html",TOPIC_DICT = TOPIC_DICT,the_contents = contents,the_title = title,finished_items= finished_items, finished_title= finished_title)
+
+# @app.route('/remove/', methods = ['POST'])
+# # @login_required
+# def removingItem():
+#     c, conn = connection()
+#     _ = c.execute('SELECT item FROM items ORDER BY item DESC;')
+#     contents = c.fetchall() 
+#     title = 'REMOVE'
+#     c.close()
+#     conn.close()
+#     gc.collect()
+#     return render_template("remove.html", TOPIC_DICT = TOPIC_DICT, the_contents = contents, the_title = title)
+#     if request.method == 'POST':
+#         yourItem = thwart(request.form['removeItems'])
+#         c, conn = connection()
+#         c.execute('DELETE FROM items WHERE (item) == ("%s");' %
+#                             (yourItem))
+#         conn.commit()
+#         c.close()
+#         conn.close()
+#         gc.collect()
+
+#         return redirect(url_for("home"))
+
+        
+# @app.route('/itemUpdate', methods = ['POST'])
+# def completed_item():
+# 	if request.method == 'POST':
+# 		movedItem = thwart(request.form['item_list'])
+
+# 		c, conn = connection()
+# 		c.execute('DELETE FROM items WHERE item == ("%s");' %
+#                             (movedItem))
+# 		conn.commit()
+# 		c.close()
+# 		conn.close()
+# 		gc.collect()
+
+# 		return redirect(url_for("home"))
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -31,12 +86,25 @@ def page_not_found(e):
 def page_not_found(e):
 	return render_template("405.html")
 
-# @app.route('/hom/')
-# def slashboard():
-# 	try:
-# 		return render_template("home.html", TOPIC_DICT = shamwow)
-# 	except Exception as e:
-# 		return render_template("500.html", error= str(e))
+@app.route(TOPIC_DICT["Basics"][0][1])
+def go_to_adding_item():
+    return render_template("addItem.html")
+
+
+@app.route('/addItem', methods = ['POST'])
+# @login_required
+def addingItem():
+    if request.method == 'POST':
+        yourItem = thwart(request.form['yourItem'])
+        c, conn = connection()
+        c.execute('INSERT INTO items (item) VALUES ("%s");' %
+                            (yourItem))
+    conn.commit()
+    c.close()
+    conn.close()
+    gc.collect()
+
+    return redirect(url_for("home"))
 
 
 @app.route('/login/', methods = ["GET", "POST"])
@@ -65,13 +133,25 @@ def login_page():
 		return render_template('login.html', error = error)
 #To DO (change password?)
 
-# @app.route('/logout/')
-# @login_required
-# def logout_page():
-# 	if session['logged_in']:
-# 		session['logged_in'] = False
-# 		session['username'] = None
-# 	return redirect(url_for('main'))
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("You need to login first")
+            return redirect(url_for('login_page'))
+
+    return wrap
+
+@app.route("/logout/")
+@login_required
+def logout():
+	session.clear()
+	flash("You have been logged out!")
+	gc.collect()
+	return redirect(url_for('main'))
+		
 
 class RegistrationForm(Form):
     username = TextField('Username', [validators.Length(min=4, max=20)])
@@ -113,7 +193,7 @@ def register_page():
                 session['logged_in'] = True
                 session['username'] = username
 
-                return redirect(url_for("home"))
+                return redirect(url_for("login_page"))
 
         return render_template("register.html", form = form)
     except Exception as e:
