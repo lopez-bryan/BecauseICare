@@ -18,7 +18,7 @@ app.secret_key = os.urandom(24)
 @app.route('/main/')
 def homepage():
     return render_template("main.html")
-    
+
 @app.route('/home/')
 def home():
 	c, conn = connection()
@@ -39,44 +39,43 @@ def home():
 	#flash("flash test!!!!")
 	return render_template("home.html",TOPIC_DICT = TOPIC_DICT,the_contents = contents,the_title = title,finished_items= finished_items, finished_title= finished_title)
 
-# @app.route('/remove/', methods = ['POST'])
-# # @login_required
-# def removingItem():
-#     c, conn = connection()
-#     _ = c.execute('SELECT item FROM items ORDER BY item DESC;')
-#     contents = c.fetchall() 
-#     title = 'REMOVE'
-#     c.close()
-#     conn.close()
-#     gc.collect()
-#     return render_template("remove.html", TOPIC_DICT = TOPIC_DICT, the_contents = contents, the_title = title)
-#     if request.method == 'POST':
-#         yourItem = thwart(request.form['removeItems'])
-#         c, conn = connection()
-#         c.execute('DELETE FROM items WHERE (item) == ("%s");' %
-#                             (yourItem))
-#         conn.commit()
-#         c.close()
-#         conn.close()
-#         gc.collect()
-
-#         return redirect(url_for("home"))
+# @app.route('/home/')
+# def home():
+# 	c, conn = connection()
+# 	_ = c.execute('SELECT item FROM items WHERE finished_item != "finished" ORDER BY item DESC;')
+# 	contents = c.fetchall() 
+# 	title = 'NEEDS'
+# 	# finished_title = 'NEEDS MET'
+# 	c.close()
+# 	conn.close()
+# 	gc.collect()
+# 	#second table
+# 	# c, conn = connection()
+# # 	_ = c.execute('SELECT finished_item FROM items')#-
+# # 	finished_items = c.fetchall() 
+# # 	finished_title = 'NEEDS MET'
+# # 	c.close()
+# # 	conn.close()
+# # 	gc.collect()
+# 	#flash("flash test!!!!")
+# 	return render_template("home.html",TOPIC_DICT = TOPIC_DICT,the_contents = contents,the_title = title,finished_items= finished_items, finished_title= finished_title)
 
         
-# @app.route('/itemUpdate', methods = ['POST'])
-# def completed_item():
-# 	if request.method == 'POST':
-# 		movedItem = thwart(request.form['item_list'])
+@app.route('/itemUpdate', methods = ['POST'])
+def completed_item():
+	if request.method == 'POST':
+		movedItem = request.form.getlist("item")
 
-# 		c, conn = connection()
-# 		c.execute('DELETE FROM items WHERE item == ("%s");' %
-#                             (movedItem))
-# 		conn.commit()
-# 		c.close()
-# 		conn.close()
-# 		gc.collect()
+		c, conn = connection()
+		for item in movedItem:
+			c.execute('DELETE FROM items WHERE item == ("%s");' %
+                            (item))
+			conn.commit()
+		c.close()
+		conn.close()
+		gc.collect()
 
-# 		return redirect(url_for("home"))
+		return redirect(url_for("home"))
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -199,8 +198,13 @@ def register_page():
     except Exception as e:
         return(str(e))
 
+@app.route('/support-donate/')
+def donate():
+	donate = "Donations!"
+	return render_template("support-donate.html", donate = donate)
+
 if __name__ == "__main__":
 	# app.secret_key = os.urandom(24)
-	app.run()
+	app.run(debug = True)
 
 #home is dashboard

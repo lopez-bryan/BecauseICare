@@ -8,9 +8,9 @@
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#basics" aria-controls="basics" role="tab" data-toggle="tab">Basics</a></li>
-    <li role="presentation"><a href="#wdev" aria-controls="wdev" role="tab" data-toggle="tab">Web Dev</a></li>
-    <li role="presentation"><a href="#dan" aria-controls="dan" role="tab" data-toggle="tab">Data Analysis</a></li>
+    <li role="presentation" class="active"><a href="#basics" aria-controls="basics" role="tab" data-toggle="tab">Click For Basics</a></li>
+   <!--  <li role="presentation"><a href="#wdev" aria-controls="wdev" role="tab" data-toggle="tab">Web Dev</a></li>
+    <li role="presentation"><a href="#dan" aria-controls="dan" role="tab" data-toggle="tab">Data Analysis</a></li> -->
 
   </ul>
 
@@ -46,12 +46,12 @@
 	{% for log_row in the_contents %}
 	<tr>
 		{% for item in log_row %}
-		<td><input type="checkbox" name="{{ item }}" value="{{ item }}">&nbsp;&nbsp;&nbsp;{{ item }}</td>
+		<td><input type="checkbox" name="item" value="{{ item }}">&nbsp;&nbsp;&nbsp;{{ item }}</td>
 		{% endfor %}
 
 	</tr>
 	{% endfor %}
-	<td><input type="submit" value="Submit"></td>
+	<td><input type="submit" value="Finished Items"></td>
 	</form>
 </table>
 </div>
