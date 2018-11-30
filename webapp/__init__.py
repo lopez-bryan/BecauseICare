@@ -61,14 +61,14 @@ def home():
 # 	return render_template("home.html",TOPIC_DICT = TOPIC_DICT,the_contents = contents,the_title = title,finished_items= finished_items, finished_title= finished_title)
 
         
-@app.route('/itemUpdate', methods = ['POST'])
+@app.route('/itemUpdate', methods = ['GET','POST'])
 def completed_item():
 	if request.method == 'POST':
 		movedItem = request.form.getlist("item")
 
 		c, conn = connection()
 		for item in movedItem:
-			c.execute('DELETE FROM items WHERE item == ("%s");' %
+			c.execute('DELETE items WHERE item == ("%s");' %
                             (item))
 			conn.commit()
 		c.close()

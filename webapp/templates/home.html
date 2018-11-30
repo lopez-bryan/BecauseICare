@@ -6,16 +6,14 @@
 
 <div role="tabpanel">
 
-  <!-- Nav tabs -->
+  <!-- Nav tabs from bootstrap. I love bootstrap.-->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#basics" aria-controls="basics" role="tab" data-toggle="tab">Click For Basics</a></li>
-   <!--  <li role="presentation"><a href="#wdev" aria-controls="wdev" role="tab" data-toggle="tab">Web Dev</a></li>
-    <li role="presentation"><a href="#dan" aria-controls="dan" role="tab" data-toggle="tab">Data Analysis</a></li> -->
-
   </ul>
 
 
-  <!-- Tab panes -->
+  <!-- Tab panes. This loops through TOPIC_DICT and displays the links form it
+  I chose to put these content_management.py to easily be able to add and remove different topics. Right now, it's pretty bare. -->
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane fade in active" id="basics">
 	<ul>
@@ -25,24 +23,20 @@
 	</ul>
   </div>
 
- 
-
-
-  
-  <!-- <div role="tabpanel" class="tab-pane fade" id="wdev">web dev</div>
-
-  <div role="tabpanel" class="tab-pane fade" id="dan">Data analysis!#Q$@!#</div> -->
 
 </div>
 
 </div>
+
+
 
 <div class="container" align="center" style="max-width: 300px">
 	<table class="table table-hover">
 	<tr>
 		<th>{{ the_title }}</th>
 	</tr>
-	<form action="itemUpdate" method="POST">
+	<!-- Create a form to populate the items from the database into an html table with checkboxes -->
+	<form action="/itemUpdate" method="POST">
 	{% for log_row in the_contents %}
 	<tr>
 		{% for item in log_row %}
@@ -55,7 +49,7 @@
 	</form>
 </table>
 </div>
-
+ <!--  A second form for the removed items. -->
 <div class="container" align="center" style="max-width: 300px">
 	<table class="table table-hover">
 	<tr>
@@ -70,17 +64,5 @@
 	{% endfor %}
 </table>
 </div>
-
-<!-- <ul>
-
-    {% for recipe in recipes %}
-
-      <li><a href="/recipe?rid={{recipe[0]}}">{{recipe[1]}}</a></li>
-
-    {% endfor %}
-
-  </ul> -->
-
-
 
 {% endblock %}
