@@ -7,6 +7,7 @@ from MySQLdb import escape_string as thwart
 import gc
 import os
 from functools import wraps
+from flask_login import login_manager, login_required, logout_user
 
 
 TOPIC_DICT = Content()
@@ -60,6 +61,15 @@ def home():
 # 	#flash("flash test!!!!")
 # 	return render_template("home.html",TOPIC_DICT = TOPIC_DICT,the_contents = contents,the_title = title,finished_items= finished_items, finished_title= finished_title)
 
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("You need to login first")
+            return redirect(url_for('login_page'))
+    return wrap
         
 @app.route('/itemUpdate', methods = ['GET','POST'])
 def completed_item():
@@ -91,7 +101,7 @@ def go_to_adding_item():
 
 
 @app.route('/addItem', methods = ['POST'])
-# @login_required
+@login_required
 def addingItem():
     if request.method == 'POST':
         yourItem = thwart(request.form['yourItem'])
@@ -132,24 +142,28 @@ def login_page():
 		return render_template('login.html', error = error)
 #To DO (change password?)
 
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        else:
-            flash("You need to login first")
-            return redirect(url_for('login_page'))
 
-    return wrap
+# @app.route("/logout/")
+# @login_required
+# def logout():
+# 	session.clear()
+# 	flash("You have been logged out!")
+# 	gc.collect()
+# 	return redirect(url_for('main'))
+# @app.route("/logout")
+# @login_required
+# def logout():
+#     session['logged_in'] = False
+#     session.clear()
+#     flash("You are now logged out!")
+#     return redirect(url_for("main"))
 
-@app.route("/logout/")
-@login_required
+@app.route('/logout')
 def logout():
-	session.clear()
-	flash("You have been logged out!")
-	gc.collect()
-	return redirect(url_for('main'))
+   # remove the username from the session if it is there
+   session.pop('username', None)
+   return redirect(url_for("main"))
+
 		
 
 class RegistrationForm(Form):
@@ -202,6 +216,16 @@ def register_page():
 def donate():
 	donate = "Donations!"
 	return render_template("support-donate.html", donate = donate)
+
+@app.route('/about/tos/')
+def tos():
+	tos = "Terms of Service"
+	return render_template("about/tos.html", tos = tos)
+
+@app.route('/consulting/')
+def consulting():
+	consulting = "Hire me or ask questions"
+	return render_template("consulting.html", consulting = consulting)
 
 if __name__ == "__main__":
 	# app.secret_key = os.urandom(24)
