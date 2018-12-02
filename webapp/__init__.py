@@ -5,8 +5,9 @@ from wtforms import Form, BooleanField, TextField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from MySQLdb import escape_string as thwart
 import gc
-import os
+import os, logging
 from functools import wraps
+from flask_login import login_manager, login_required, logout_user
 
 
 TOPIC_DICT = Content()
@@ -15,7 +16,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 @app.route('/')
-@app.route('/main/')
+@app.route('/main')
 def homepage():
     return render_template("main.html")
 
@@ -39,51 +40,44 @@ def home():
 	#flash("flash test!!!!")
 	return render_template("home.html",TOPIC_DICT = TOPIC_DICT,the_contents = contents,the_title = title,finished_items= finished_items, finished_title= finished_title)
 
-# @app.route('/home/')
-# def home():
-# 	c, conn = connection()
-# 	_ = c.execute('SELECT item FROM items WHERE finished_item != "finished" ORDER BY item DESC;')
-# 	contents = c.fetchall() 
-# 	title = 'NEEDS'
-# 	# finished_title = 'NEEDS MET'
-# 	c.close()
-# 	conn.close()
-# 	gc.collect()
-# 	#second table
-# 	# c, conn = connection()
-# # 	_ = c.execute('SELECT finished_item FROM items')#-
-# # 	finished_items = c.fetchall() 
-# # 	finished_title = 'NEEDS MET'
-# # 	c.close()
-# # 	conn.close()
-# # 	gc.collect()
-# 	#flash("flash test!!!!")
-# 	return render_template("home.html",TOPIC_DICT = TOPIC_DICT,the_contents = contents,the_title = title,finished_items= finished_items, finished_title= finished_title)
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("You need to login first")
+            return redirect(url_for('login_page'))
+    return wrap
 
         
-@app.route('/itemUpdate', methods = ['POST'])
+@app.route('/itemUpdate', methods = ['GET','POST'])
 def completed_item():
 	if request.method == 'POST':
 		movedItem = request.form.getlist("item")
-
+		
 		c, conn = connection()
 		for item in movedItem:
-			c.execute('DELETE FROM items WHERE item == ("%s");' %
+			c.execute('DELETE FROM items WHERE item = ("%s");' %
                             (item))
-			conn.commit()
+		conn.commit()
 		c.close()
 		conn.close()
 		gc.collect()
 
 		return redirect(url_for("home"))
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html")
 
+
 @app.errorhandler(405)
 def page_not_found(e):
 	return render_template("405.html")
+
 
 @app.route(TOPIC_DICT["Basics"][0][1])
 def go_to_adding_item():
@@ -91,7 +85,7 @@ def go_to_adding_item():
 
 
 @app.route('/addItem', methods = ['POST'])
-# @login_required
+@login_required
 def addingItem():
     if request.method == 'POST':
         yourItem = thwart(request.form['yourItem'])
@@ -132,16 +126,6 @@ def login_page():
 		return render_template('login.html', error = error)
 #To DO (change password?)
 
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        else:
-            flash("You need to login first")
-            return redirect(url_for('login_page'))
-
-    return wrap
 
 @app.route("/logout/")
 @login_required
@@ -149,9 +133,9 @@ def logout():
 	session.clear()
 	flash("You have been logged out!")
 	gc.collect()
-	return redirect(url_for('main'))
-		
+	return redirect(url_for("homepage"))
 
+		
 class RegistrationForm(Form):
     username = TextField('Username', [validators.Length(min=4, max=20)])
     email = TextField('Email Address', [validators.Length(min=6, max=50)])
@@ -198,13 +182,35 @@ def register_page():
     except Exception as e:
         return(str(e))
 
+
 @app.route('/support-donate/')
 def donate():
 	donate = "Donations!"
 	return render_template("support-donate.html", donate = donate)
 
-if __name__ == "__main__":
-	# app.secret_key = os.urandom(24)
-	app.run(debug = True)
 
-#home is dashboard
+@app.route('/about/tos/')
+def tos():
+	tos = "Terms of Service"
+	return render_template("about/tos.html", tos = tos)
+
+
+@app.route('/consulting/')
+def consulting():
+	consulting = "Hire me or ask questions"
+	return render_template("consulting.html", consulting = consulting)
+
+	
+@app.route('/users/')
+def users():
+	c, conn = connection()
+	data = c.execute('select username from users')
+	conn.commit()
+	c.close()
+	conn.close()
+	gc.collect()
+	return str(data)
+
+
+if __name__ == "__main__":
+	app.run(debug = True)
