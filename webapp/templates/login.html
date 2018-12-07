@@ -5,13 +5,14 @@
 		<br>
 		<h4>Please Login:</h4>
 		<br>
+		<!-- Login information below. This information is retrieved from the login route in __init__.py -->
 		<form action="" class="form-inline" method="post">
 			<input type="text" class="form-control" placeholder = "Username" name="username" value="{{request.form.username}}">
 			<input type="password" class="form-control" placeholder = "Password" name="password" value="{{request.form.password}}">
 			<input class="btn btn-default" type="submit" value="Login">
 		</form>
 		<p><a href="/forgot-password/">Forgot Password?</a></p>
-
+		<!-- If the user has any problems, I've attached a Jinja2 error variable below. -->
 		<p>{{ error }}</p>
 	</div>
 </body>
